@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Check SSH port
+      ansible.builtin.wait_for:
+        host: 136.116.210.133
+        port: 22
+        timeout: 5
+      register: result
+      ignore_errors: true
+
+    - debug:
+        var: result
