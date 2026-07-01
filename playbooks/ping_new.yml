@@ -1,0 +1,12 @@
+- name: Ping a public IP
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Ping target
+      ansible.builtin.command: ping -c 4 136.116.210.133
+      register: result
+      changed_when: false
+
+    - debug:
+        var: result.stdout_lines
