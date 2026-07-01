@@ -1,8 +1,8 @@
 ---
 - name: Test Ansible connectivity
-  hosts: 51.8.106.116
+  hosts: all
   gather_facts: false
 
   tasks:
-    - name: Ping the remote host
+    - name: Ping all remote hosts
       ansible.builtin.ping:
