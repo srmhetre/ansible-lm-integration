@@ -1,33 +1,36 @@
 ---
-- name: Confirm expected managed node
+- name: Demo Playbook
   hosts: 10.55.4.211
-  gather_facts: yes
-
-  vars:
-    expected_hostname: "your-managed-node-hostname"
-    expected_ip: "your-managed-node-ip"
+  gather_facts: false
 
   tasks:
-    - name: Show current managed node details
-      debug:
-        msg:
-          - "Inventory hostname: {{ inventory_hostname }}"
-          - "Ansible hostname: {{ ansible_hostname }}"
-          - "FQDN: {{ ansible_fqdn }}"
-          - "Default IPv4: {{ ansible_default_ipv4.address | default('N/A') }}"
+    - name: Hello World
+      ansible.builtin.debug:
+        msg: "Hello from GitHub!"
 
-    - name: Fail if playbook is running on unexpected node
-      fail:
-        msg: >
-          Playbook is running on unexpected node.
-          Expected hostname={{ expected_hostname }},
-          expected IP={{ expected_ip }},
-          but got hostname={{ ansible_hostname }},
-          IP={{ ansible_default_ipv4.address | default('N/A') }}.
-      when:
-        - ansible_hostname != expected_hostname
-        - ansible_default_ipv4.address | default('') != expected_ip
+    - name: List all systemd services
+      ansible.builtin.command: systemctl list-units --type=service --all
+      register: systemctl_services
+      changed_when: false
 
-    - name: Confirm correct managed node
-      debug:
-        msg: "Confirmed: playbook is running on the expected managed node."
+    - name: Display systemd services
+      ansible.builtin.debug:
+        var: systemctl_services.stdout_lines
+
+    - name: Check SSH service status
+      ansible.builtin.command: systemctl status sshd
+      register: ssh_status
+      changed_when: false
+
+    - name: Display SSH service status
+      ansible.builtin.debug:
+        var: ssh_status.stdout_lines
+
+    - name: Get SSH service active timestamp
+      ansible.builtin.command: systemctl show sshd --property=ActiveEnterTimestamp
+      register: ssh_timestamp
+      changed_when: false
+
+    - name: Display SSH service start timestamp
+      ansible.builtin.debug:
+        msg: "{{ ssh_timestamp.stdout }}"
