@@ -1,6 +1,6 @@
 ---
 - name: Test Ansible connectivity
-  hosts: 136.116.210.133
+  hosts: 51.8.106.116
   gather_facts: false
 
   tasks:
