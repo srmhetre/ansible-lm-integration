@@ -1,6 +1,6 @@
 ---
 - name: Demo Playbook
-  hosts: localhost
+  hosts: 10.55.4.211
   gather_facts: false
 
   tasks:
