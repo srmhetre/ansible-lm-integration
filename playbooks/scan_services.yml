@@ -1,0 +1,33 @@
+---
+- name: Confirm expected managed node
+  hosts: 10.55.4.211
+  gather_facts: yes
+
+  vars:
+    expected_hostname: "your-managed-node-hostname"
+    expected_ip: "your-managed-node-ip"
+
+  tasks:
+    - name: Show current managed node details
+      debug:
+        msg:
+          - "Inventory hostname: {{ inventory_hostname }}"
+          - "Ansible hostname: {{ ansible_hostname }}"
+          - "FQDN: {{ ansible_fqdn }}"
+          - "Default IPv4: {{ ansible_default_ipv4.address | default('N/A') }}"
+
+    - name: Fail if playbook is running on unexpected node
+      fail:
+        msg: >
+          Playbook is running on unexpected node.
+          Expected hostname={{ expected_hostname }},
+          expected IP={{ expected_ip }},
+          but got hostname={{ ansible_hostname }},
+          IP={{ ansible_default_ipv4.address | default('N/A') }}.
+      when:
+        - ansible_hostname != expected_hostname
+        - ansible_default_ipv4.address | default('') != expected_ip
+
+    - name: Confirm correct managed node
+      debug:
+        msg: "Confirmed: playbook is running on the expected managed node."
