@@ -1,0 +1,5 @@
+- hosts: 10.55.4.211
+  gather_facts: false
+  tasks:
+    - name: Ping EC2
+      command: ping -c 3 10.55.4.211
