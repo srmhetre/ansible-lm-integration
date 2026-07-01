@@ -1,17 +1,8 @@
-- name: Ping a host from the Ansible controller
-  hosts: localhost
+---
+- name: Test Ansible connectivity
+  hosts: 136.116.210.133
   gather_facts: false
 
-  vars:
-    target_host: "136.116.210.133"   # Replace with your target IP or hostname
-
   tasks:
-    - name: Ping the target host
-      ansible.builtin.command:
-        cmd: "ping -c 4 {{ target_host }}"
-      register: ping_result
-      changed_when: false
-
-    - name: Display ping output
-      ansible.builtin.debug:
-        var: ping_result.stdout_lines
+    - name: Ping the remote host
+      ansible.builtin.ping:
