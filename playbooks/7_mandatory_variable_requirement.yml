@@ -1,0 +1,26 @@
+---
+- name: Sample playbook with mandatory variable requirement
+  hosts: all
+  gather_facts: false
+  vars:
+    mandatory_message: "{{ mandatory_message | default(omit) }}"
+  tasks:
+    - name: Debug separator - play start
+      debug:
+        msg: "===== SAMPLE 7 START: mandatory variable required ====="
+
+    - name: Validate mandatory variable
+      ansible.builtin.assert:
+        that:
+          - mandatory_message is defined
+          - mandatory_message | string | length > 0
+        fail_msg: "mandatory_message must be provided at runtime, for example: -e mandatory_message='Hello'"
+        success_msg: "mandatory_message is present"
+
+    - name: Show mandatory variable value
+      debug:
+        msg: "Mandatory message: {{ mandatory_message }}"
+
+    - name: Debug separator - play end
+      debug:
+        msg: "===== SAMPLE 7 END ====="

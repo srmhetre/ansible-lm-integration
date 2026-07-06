@@ -1,0 +1,21 @@
+---
+- name: Sample playbook with optional variable requirement
+  hosts: all
+  gather_facts: false
+  vars:
+    optional_message: "{{ optional_message | default('Default optional message') }}"
+  tasks:
+    - name: Debug separator - play start
+      debug:
+        msg: "===== SAMPLE 8 START: optional variable ====="
+
+    - name: Show optional variable value
+      debug:
+        msg: "Optional message: {{ optional_message }}"
+
+    - name: Safe command using the optional variable
+      ansible.builtin.command: /bin/echo "{{ optional_message }}"
+
+    - name: Debug separator - play end
+      debug:
+        msg: "===== SAMPLE 8 END ====="

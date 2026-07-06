@@ -1,0 +1,30 @@
+---
+- name: Sample play 1 in a multi-play file
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Debug separator - play 1 start
+      debug:
+        msg: "===== SAMPLE 6 PLAY 1 START ====="
+
+    - name: Play 1 safe command
+      ansible.builtin.command: /bin/echo "This is play 1"
+
+    - name: Debug separator - play 1 end
+      debug:
+        msg: "===== SAMPLE 6 PLAY 1 END ====="
+
+- name: Sample play 2 in the same file
+  hosts: 10.55.5.182
+  gather_facts: false
+  tasks:
+    - name: Debug separator - play 2 start
+      debug:
+        msg: "===== SAMPLE 6 PLAY 2 START ====="
+
+    - name: Play 2 safe command
+      ansible.builtin.command: /bin/echo "This is play 2"
+
+    - name: Debug separator - play 2 end
+      debug:
+        msg: "===== SAMPLE 6 PLAY 2 END ====="

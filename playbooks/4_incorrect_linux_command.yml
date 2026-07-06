@@ -1,0 +1,15 @@
+---
+- name: Sample playbook with an incorrect Linux command
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Debug separator - play start
+      debug:
+        msg: "===== SAMPLE 4 START: intentionally bad command ====="
+
+    - name: Intentional bad command
+      ansible.builtin.command: nonexistent_linux_command_abc123
+
+    - name: Debug separator - play end
+      debug:
+        msg: "===== SAMPLE 4 END ====="

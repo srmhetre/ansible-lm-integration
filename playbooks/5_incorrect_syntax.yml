@@ -1,0 +1,15 @@
+---
+- name: Sample playbook with incorrect syntax
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Debug separator - play start
+      debug:
+        msg: "===== SAMPLE 5 START: intentionally broken syntax below ====="
+
+    - name: Broken task
+      ansible.builtin.command /bin/echo "This line is intentionally malformed"
+
+    - name: Debug separator - play end
+      debug:
+        msg: "===== SAMPLE 5 END ====="

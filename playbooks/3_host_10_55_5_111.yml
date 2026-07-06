@@ -1,0 +1,15 @@
+---
+- name: Sample playbook for host 10.55.5.111
+  hosts: 10.55.5.111
+  gather_facts: false
+  tasks:
+    - name: Debug separator - play start
+      debug:
+        msg: "===== SAMPLE 3 START: host=10.55.5.111 ====="
+
+    - name: Safe command for host 10.55.5.111
+      ansible.builtin.command: /bin/echo "Hello, 10.55.5.111"
+
+    - name: Debug separator - play end
+      debug:
+        msg: "===== SAMPLE 3 END ====="
