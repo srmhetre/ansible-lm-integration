@@ -1,0 +1,45 @@
+---
+- name: Safe Linux Test Playbook
+  hosts: all
+  gather_facts: false
+
+  vars:
+    # Value supplied by the AAP Template Survey.
+    # Falls back to /tmp/ansible_test.txt when the survey input is not provided.
+    test_file_dest: "{{ dest | default('/tmp/ansible_test.txt') }}"
+
+  tasks:
+    - name: Display hostname
+      ansible.builtin.debug:
+        msg: "Hostname: {{ ansible_hostname }}"
+
+    - name: Show survey destination input
+      ansible.builtin.debug:
+        msg: "AAP survey dest input: {{ dest | default('not provided') }}"
+
+    - name: Check disk usage
+      ansible.builtin.command: df -h /
+      register: disk_usage
+      changed_when: false
+
+    - name: Show disk usage
+      ansible.builtin.debug:
+        var: disk_usage.stdout_lines
+
+    - name: Create a harmless test file in the survey-defined destination
+      ansible.builtin.copy:
+        dest: "{{ test_file_dest }}"
+        content: |
+          This file was created by Ansible.
+          Host: {{ ansible_hostname }}
+          Destination: {{ test_file_dest }}
+        mode: "0644"
+
+    - name: Verify test file exists
+      ansible.builtin.stat:
+        path: "{{ test_file_dest }}"
+      register: test_file
+
+    - name: Display file status
+      ansible.builtin.debug:
+        msg: "Test file exists: {{ test_file.stat.exists }}"
