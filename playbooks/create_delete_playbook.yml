@@ -1,39 +1,26 @@
 ---
-- name: Create or Delete a File Based on User Input
+- name: File create or delete from survey input
   hosts: localhost
   gather_facts: false
 
-  vars_prompt:
-    - name: operation
-      prompt: "Enter operation (create/delete)"
-      private: no
-
-    - name: file_path
-      prompt: "Enter the full file path"
-      private: no
-
   tasks:
-    - name: Validate operation
-      assert:
+    - name: Ensure required inputs are provided
+      ansible.builtin.assert:
         that:
+          - operation is defined
+          - file_path is defined
           - operation in ['create', 'delete']
-        fail_msg: "Invalid operation. Please choose 'create' or 'delete'."
+        fail_msg: "Provide operation=create|delete and file_path."
 
-    - name: Create the file
+    - name: Create file
       ansible.builtin.file:
         path: "{{ file_path }}"
         state: touch
-        mode: '0644'
+        mode: "0644"
       when: operation == "create"
 
-    - name: Delete the file
+    - name: Delete file
       ansible.builtin.file:
         path: "{{ file_path }}"
         state: absent
       when: operation == "delete"
-
-    - name: Display result
-      debug:
-        msg: >-
-          File {{ file_path }}
-          {{ 'created' if operation == 'create' else 'deleted' }} successfully.
