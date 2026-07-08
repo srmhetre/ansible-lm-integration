@@ -1,0 +1,44 @@
+---
+- name: Validate AAP survey inputs
+  hosts: localhost
+  gather_facts: false
+
+  vars:
+    survey_text: "{{ survey_text | default('') }}"
+    survey_textarea: "{{ survey_textarea | default('') }}"
+    survey_password: "{{ survey_password | default('') }}"
+    survey_choice_single: "{{ survey_choice_single | default('') }}"
+    survey_choice_multi: "{{ survey_choice_multi | default([]) }}"
+    survey_integer: "{{ survey_integer | default(0) }}"
+    survey_float: "{{ survey_float | default(0.0) }}"
+
+  tasks:
+    - name: Validate required inputs
+      ansible.builtin.assert:
+        that:
+          - survey_text | length > 0
+          - survey_textarea | length > 0
+          - survey_password | length > 0
+          - survey_choice_single | length > 0
+          - survey_choice_multi | length > 0
+          - survey_integer is number
+          - survey_float is number
+        fail_msg: "One or more survey inputs are missing or invalid."
+
+    - name: Normalize values
+      ansible.builtin.set_fact:
+        normalized_integer: "{{ survey_integer | int }}"
+        normalized_float: "{{ survey_float | float }}"
+        normalized_choices: "{{ survey_choice_multi if survey_choice_multi is sequence else [survey_choice_multi] }}"
+
+    - name: Show received values safely
+      ansible.builtin.debug:
+        msg:
+          text: "{{ survey_text }}"
+          textarea: "{{ survey_textarea }}"
+          password_length: "{{ survey_password | length }}"
+          single_choice: "{{ survey_choice_single }}"
+          multi_choice: "{{ normalized_choices }}"
+          integer_value: "{{ normalized_integer }}"
+          float_value: "{{ normalized_float }}"
+
