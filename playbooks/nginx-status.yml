@@ -1,0 +1,21 @@
+---
+- name: Check Nginx Status
+  hosts: all
+  become: yes
+  tasks:
+    - name: Get nginx service status
+      ansible.builtin.systemd:
+        name: nginx
+      register: nginx_status
+
+    - name: Show nginx status
+      ansible.builtin.debug:
+        msg: |
+          =============================
+          Nginx Service Status Report
+          =============================
+          Service  : nginx
+          State    : {{ nginx_status.status.ActiveState }}
+          SubState : {{ nginx_status.status.SubState }}
+          LoadState: {{ nginx_status.status.LoadState }}
+          =============================

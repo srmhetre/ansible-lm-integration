@@ -1,0 +1,25 @@
+---
+- name: Restart Nginx Service
+  hosts: all
+  become: yes
+  tasks:
+    - name: Restart nginx
+      ansible.builtin.systemd:
+        name: nginx
+        state: restarted
+
+    - name: Verify nginx is running
+      ansible.builtin.systemd:
+        name: nginx
+      register: nginx_result
+
+    - name: Show result
+      ansible.builtin.debug:
+        msg: |
+          =============================
+          Nginx Restart Result
+          =============================
+          Service  : nginx
+          State    : {{ nginx_result.status.ActiveState }}
+          SubState : {{ nginx_result.status.SubState }}
+          =============================
